@@ -1,0 +1,6 @@
+flask
+pytest
+pytest-playwright
+playwright
+pytest-html
+requests

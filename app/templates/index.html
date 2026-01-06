@@ -1,0 +1,32 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <title>Playwright CI Demo</title>
+  <link rel="stylesheet" href="/static/style.css" />
+</head>
+<body>
+  <header>
+    <img src="/static/logo.png" alt="Logo" id="logo" />
+    <h1 id="title">Playwright CI Demo</h1>
+  </header>
+
+  <main>
+    <section id="content">
+      <p id="intro">This page is tested end-to-end using Playwright.</p>
+      <button id="action-btn">Click me</button>
+      <p id="result" hidden>Button clicked!</p>
+    </section>
+
+    <section id="media">
+      <h2>Video</h2>
+      <video id="demo-video" width="320" controls>
+        <source src="/static/sample.mp4" type="video/mp4" />
+        Your browser does not support HTML5 video.
+      </video>
+    </section>
+  </main>
+
+  <script src="/static/app.js"></script>
+</body>
+</html>
