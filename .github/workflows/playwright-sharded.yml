@@ -1,0 +1,37 @@
+name: Playwright Sharded
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  shards:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        shard: [1, 2, 3, 4]
+        include:
+          - shard: 1
+          - shard: 2
+          - shard: 3
+          - shard: 4
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+          cache: 'pip'
+      - run: pip install -r requirements.txt
+      - uses: actions/cache@v4
+        with:
+          path: ~/.cache/ms-playwright
+          key: ubuntu-playwright-${{ hashFiles('requirements.txt') }}
+      - run: python -m playwright install chromium --with-deps
+      - name: Tests (shard ${{ matrix.shard }})
+        run: |
+          pytest tests/ \
+            --dist=loadfile \
+            --numprocesses=4 \
+            -v
