@@ -1,6 +1,7 @@
-flask
-pytest
-pytest-playwright
-playwright
-pytest-html
-requests
+flask==3.0.3
+pytest==8.3.3
+pytest-playwright==0.7.2
+playwright==1.48.0
+pytest-html==4.1.1
+pytest-xdist==3.8.0    # Fixed: latest stable version
+requests==2.32.3
