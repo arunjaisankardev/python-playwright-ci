@@ -22,15 +22,45 @@ jobs:
         with:
           python-version: "3.11"
 
+      # Cache pip dependencies (~30s speedup)
+      - name: Cache pip dependencies
+        uses: actions/cache@v4
+        id: pip-cache
+        with:
+          path: ~/.cache/pip
+          key: ${{ runner.os }}-pip-${{ hashFiles('requirements.txt') }}
+          restore-keys: |
+            ${{ runner.os }}-pip-
+
+      # Install Python deps (skip if cache hit)
       - name: Install Python dependencies
+        if: steps.pip-cache.outputs.cache-hit != 'true'
         run: |
           python -m pip install --upgrade pip
           pip install -r requirements.txt
 
+      # Cache Playwright browsers (~90s speedup, biggest win)
+      - name: Cache Playwright browsers
+        uses: actions/cache@v4
+        id: playwright-cache
+        with:
+          path: ~/.cache/ms-playwright
+          key: ${{ runner.os }}-playwright-${{ hashFiles('requirements.txt') }}
+          restore-keys: |
+            ${{ runner.os }}-playwright-
+
+      # Install Playwright browsers (skip if cache hit)
       - name: Install Playwright browsers
+        if: steps.playwright-cache.outputs.cache-hit != 'true'
         run: |
           python -m playwright install --with-deps
 
+      # Lightweight deps refresh if browsers cached
+      - name: Install Playwright system deps
+        if: steps.playwright-cache.outputs.cache-hit == 'true'
+        run: python -m playwright install-deps
+
+      # Run tests
       - name: Run tests with Playwright (pytest)
         run: |
           pytest \
@@ -39,6 +69,7 @@ jobs:
             --html=playwright-report/report.html \
             --self-contained-html
 
+      # Upload HTML report (always)
       - name: Upload HTML report
         if: always()
         uses: actions/upload-artifact@v4
