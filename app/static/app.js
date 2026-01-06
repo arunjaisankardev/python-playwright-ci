@@ -5,7 +5,7 @@ document.addEventListener("DOMContentLoaded", () => {
   if (btn && result) {
     btn.addEventListener("click", () => {
       result.hidden = false;
-      result.textContent = "Button clicked!";
+      result.textContent = "Broken button!";  // <- intentionally wrong
     });
   }
 });
